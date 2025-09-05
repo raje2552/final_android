@@ -1,5 +1,4 @@
 package com.example.finalproject;
-
 import static com.example.finalproject.mainFragment.ShortList;
 import static com.example.finalproject.mainFragment.moviesList;
 import static com.example.finalproject.mainFragment.seriesList;
@@ -18,7 +17,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.HttpUrl;
 
-public class fetch_Data extends AsyncTask<ArrayList<String>, ArrayList<String>, ArrayList<String>> {
+public class fetch_Data extends AsyncTask<ArrayList<String>, ArrayList<String>, ArrayList<String>> implements lisenerClick {
 
     private Activity contextRef;
     private OkHttpClient client;
@@ -78,6 +77,7 @@ public class fetch_Data extends AsyncTask<ArrayList<String>, ArrayList<String>, 
             if (!strings.isEmpty()) {
                 Toast.makeText(contextRef, "Data Loaded Successfully", Toast.LENGTH_SHORT).show();
 
+
                 for (int i = 0; i < strings.size(); i++) {
                     try {
                         JSONObject JSObject = new JSONObject(strings.get(i));
@@ -92,7 +92,6 @@ public class fetch_Data extends AsyncTask<ArrayList<String>, ArrayList<String>, 
                                     break;
                                 case 1:
                                     seriesList.add(new Movie(movies.getString("Title"), movies.getString("Poster"), movies.getString("Year"), null, movies.getString("Type")));
-                                    System.out.println( "is add (dfgdfgdf)  +");
                                     break;
                                 case 2:
                                     ShortList.add(new Movie(movies.getString("Title"), movies.getString("Poster"), movies.getString("Year"), null, movies.getString("Type")));
@@ -120,7 +119,7 @@ public class fetch_Data extends AsyncTask<ArrayList<String>, ArrayList<String>, 
 
     private void setupRecyclerView(Activity context, int recyclerId, ArrayList<Movie> dataList) {
         RecyclerView rv = context.findViewById(recyclerId);
-        movies_Adapter adapter = new movies_Adapter(context, dataList);
+        movies_Adapter adapter = new movies_Adapter(context, dataList , this);
         LinearLayoutManager manager = new LinearLayoutManager(context, RecyclerView.HORIZONTAL, false);
         rv.setLayoutManager(manager);
         rv.setAdapter(adapter);
@@ -138,5 +137,16 @@ public class fetch_Data extends AsyncTask<ArrayList<String>, ArrayList<String>, 
             return string;
 
     }
+
+    @Override
+    public void onItemClick(Movie movie) {
+            Toast.makeText(contextRef, "الفيلم المختار: " + title, Toast.LENGTH_SHORT).show();
+            if (contextRef instanceof MainActivity) {
+                System.out.println("the error ocrru (645764hytn):gh"+movie.getTitle_name());
+                ((MainActivity) contextRef).onDataPass(movie);
+            }
+
+    }
+
 
 }
